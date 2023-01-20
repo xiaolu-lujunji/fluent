@@ -26,7 +26,7 @@ module.exports = {
   plugins: ['html', 'vue'],
   rules: {
     // Two spaces but disallow semicolons
-    indent: ['error', 2, { 'SwitchCase': 1, 'ignoreComments': true }],
+    indent: ['error', 2, { SwitchCase: 1, ignoreComments: true }],
     semi: [2, 'never'],
     'no-return-await': 'error',
     'no-return-assign': 'error',
@@ -41,7 +41,8 @@ module.exports = {
     // TODO: fix these errors someday
     'prefer-const': 'off',
     'no-mixed-operators': 'off',
-    'no-prototype-builtins': 'off'
+    'no-prototype-builtins': 'off',
+    'space-before-function-paren': 'off'
   },
   settings: {
     'import/resolver': {

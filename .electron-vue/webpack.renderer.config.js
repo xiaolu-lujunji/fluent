@@ -5,11 +5,10 @@ process.env.BABEL_ENV = 'renderer'
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const SpritePlugin = require('svg-sprite-loader/plugin')
-const postcssPresetEnv = require('postcss-preset-env')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const ESLintPlugin = require('eslint-webpack-plugin')
 
@@ -33,18 +32,22 @@ const rendererConfig = {
     emitOnErrors: false
   },
   infrastructureLogging: {
-    level: 'warn',
+    level: 'warn'
   },
   entry: {
     renderer: path.join(__dirname, '../src/renderer/main.js')
   },
   externals: [
-    ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
+    ...Object.keys(dependencies || {}).filter(
+      d => !whiteListedModules.includes(d)
+    )
   ],
   module: {
     rules: [
       {
-        test: require.resolve(path.join(__dirname, '../src/muya/lib/assets/libs/snap.svg-min.js')),
+        test: require.resolve(
+          path.join(__dirname, '../src/muya/lib/assets/libs/snap.svg-min.js')
+        ),
         use: 'imports-loader?this=>window,fix=>module.exports=0'
       },
       {
@@ -58,10 +61,7 @@ const rendererConfig = {
       },
       {
         test: /(theme\-chalk(?:\/|\\)index|exportStyle|katex|github\-markdown|prism[\-a-z]*|\.theme|headerFooterStyle)\.css$/,
-        use: [
-          'to-string-loader',
-          'css-loader'
-        ]
+        use: ['to-string-loader', 'css-loader']
       },
       {
         test: /\.css$/,
@@ -72,16 +72,7 @@ const rendererConfig = {
             loader: 'css-loader',
             options: { importLoaders: 1 }
           },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [
-                  postcssPresetEnv({ stage: 0 })
-                ],
-              },
-            }
-          }
+          'postcss-loader'
         ]
       },
       {
@@ -155,13 +146,8 @@ const rendererConfig = {
     new ESLintPlugin({
       cache: !isProduction,
       extensions: ['js', 'vue'],
-      files: [
-        'src',
-        'test'
-      ],
-      exclude: [
-        'node_modules'
-      ],
+      files: ['src', 'test'],
+      exclude: ['node_modules'],
       emitError: true,
       failOnError: true,
       // NB: Threads must be disabled, otherwise no errors are emitted.
@@ -205,12 +191,15 @@ const rendererConfig = {
   },
   resolve: {
     alias: {
-      'main': path.join(__dirname, '../src/main'),
+      main: path.join(__dirname, '../src/main'),
       '@': path.join(__dirname, '../src/renderer'),
-      'common': path.join(__dirname, '../src/common'),
-      'muya': path.join(__dirname, '../src/muya'),
-      snapsvg: path.join(__dirname, '../src/muya/lib/assets/libs/snap.svg-min.js'),
-      'vue$': 'vue/dist/vue.esm.js'
+      common: path.join(__dirname, '../src/common'),
+      muya: path.join(__dirname, '../src/muya'),
+      snapsvg: path.join(
+        __dirname,
+        '../src/muya/lib/assets/libs/snap.svg-min.js'
+      ),
+      vue$: 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
   },
@@ -229,16 +218,17 @@ if (!isProduction) {
   // }
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+      __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
     })
   )
 }
 
-if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test' &&
-  !process.env.MARKTEXT_DEV_HIDE_BROWSER_ANALYZER) {
-  rendererConfig.plugins.push(
-    new BundleAnalyzerPlugin()
-  )
+if (
+  process.env.NODE_ENV !== 'production' &&
+  process.env.NODE_ENV !== 'test' &&
+  !process.env.MARKTEXT_DEV_HIDE_BROWSER_ANALYZER
+) {
+  rendererConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
 // Fix debugger breakpoints
@@ -256,7 +246,9 @@ if (isProduction) {
 
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
-      'process.env.UNSPLASH_ACCESS_KEY': JSON.stringify(process.env.UNSPLASH_ACCESS_KEY)
+      'process.env.UNSPLASH_ACCESS_KEY': JSON.stringify(
+        process.env.UNSPLASH_ACCESS_KEY
+      )
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
@@ -274,8 +266,13 @@ if (isProduction) {
           }
         },
         {
-          from: path.resolve(__dirname, '../node_modules/codemirror/mode/*/*').replace(/\\/g, '/'),
-          to: path.join(__dirname, '../dist/electron/codemirror/mode/[name]/[name][ext]')
+          from: path
+            .resolve(__dirname, '../node_modules/codemirror/mode/*/*')
+            .replace(/\\/g, '/'),
+          to: path.join(
+            __dirname,
+            '../dist/electron/codemirror/mode/[name]/[name][ext]'
+          )
         }
       ]
     })
